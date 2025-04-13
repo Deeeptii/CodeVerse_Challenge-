@@ -1,0 +1,32 @@
+int romanToInt(char* s) {  
+    // Define values for each Roman numeral symbol  
+    int values[26];  
+    values['I' - 'A'] = 1;  
+    values['V' - 'A'] = 5;  
+    values['X' - 'A'] = 10;  
+    values['L' - 'A'] = 50;  
+    values['C' - 'A'] = 100;  
+    values['D' - 'A'] = 500;  
+    values['M' - 'A'] = 1000;  
+    
+    int result = 0;  
+    int prevValue = 0;  
+    
+    // Iterate through the string from right to left  
+    for (int i = strlen(s) - 1; i >= 0; i--) {  
+        int currentValue = values[s[i] - 'A'];  
+        
+        // If current value is less than previous value, subtract  
+        // This handles cases like IV (4), IX (9), XL (40), etc.  
+        if (currentValue < prevValue) {  
+            result -= currentValue;  
+        } else {  
+            result += currentValue;  
+        }  
+        
+        // Update previous value for next iteration  
+        prevValue = currentValue;  
+    }  
+    
+    return result;  
+}

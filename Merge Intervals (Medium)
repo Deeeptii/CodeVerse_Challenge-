@@ -1,0 +1,37 @@
+void sortColors(int* nums, int numsSize) {
+    // Initialize three pointers for the Dutch National Flag algorithm
+    int low = 0;        // Boundary for 0s (red)
+    int mid = 0;        // Current element being examined
+    int high = numsSize - 1;  // Boundary for 2s (blue)
+    
+    // Traverse the array once
+    while (mid <= high) {
+        switch (nums[mid]) {
+            case 0:  // Red
+                // Swap with the low pointer and move both pointers forward
+                {
+                    int temp = nums[low];
+                    nums[low] = nums[mid];
+                    nums[mid] = temp;
+                }
+                low++;
+                mid++;
+                break;
+                
+            case 1:  // White
+                // Just move the mid pointer forward
+                mid++;
+                break;
+                
+            case 2:  // Blue
+                // Swap with the high pointer and move high pointer backward
+                {
+                    int temp = nums[mid];
+                    nums[mid] = nums[high];
+                    nums[high] = temp;
+                }
+                high--;
+                break;
+        }
+    }
+}

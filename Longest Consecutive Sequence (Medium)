@@ -1,0 +1,42 @@
+int longestConsecutive(int* nums, int numsSize) {  
+    // If array is empty, return 0  
+    if (numsSize == 0) return 0;  
+    
+    // Create a hash set using a boolean array  
+    int min = nums[0], max = nums[0];  
+    
+    // Find the min and max values in the array  
+    for (int i = 1; i < numsSize; i++) {  
+        if (nums[i] < min) min = nums[i];  
+        if (nums[i] > max) max = nums[i];  
+    }  
+    
+    // Create a boolean array to mark presence of numbers  
+    int range = max - min + 1;  
+    bool* present = (bool*)calloc(range, sizeof(bool));  
+    
+    // Mark numbers as present  
+    for (int i = 0; i < numsSize; i++) {  
+        present[nums[i] - min] = true;  
+    }  
+    
+    // Find longest consecutive sequence  
+    int longest = 0;  
+    int current = 0;  
+    
+    for (int i = 0; i < range; i++) {  
+        if (present[i]) {  
+            current++;  
+            if (current > longest) {  
+                longest = current;  
+            }  
+        } else {  
+            current = 0;  
+        }  
+    }  
+    
+    // Free allocated memory  
+    free(present);  
+    
+    return longest;  
+}  

@@ -1,0 +1,21 @@
+void merge(int* nums1, int nums1Size, int m, int* nums2, int nums2Size, int n) {
+    // Start from the end of both arrays and work backwards
+    int i = m - 1;    // Last element index in nums1
+    int j = n - 1;    // Last element index in nums2
+    int k = m + n - 1;  // Last position in the merged array
+    
+    // Merge from the end to avoid overwriting nums1 elements we still need
+    while (i >= 0 && j >= 0) {
+        if (nums1[i] > nums2[j]) {
+            nums1[k--] = nums1[i--];
+        } else {
+            nums1[k--] = nums2[j--];
+        }
+    }
+    
+    // If there are remaining elements in nums2, copy them to nums1
+    // (no need to check for remaining nums1 elements as they're already in place)
+    while (j >= 0) {
+        nums1[k--] = nums2[j--];
+    }
+}

@@ -1,0 +1,44 @@
+struct ListNode* mergeKLists(struct ListNode** lists, int listsSize) {
+    // Handle edge cases
+    if (listsSize == 0) return NULL;
+    
+    // Create a dummy head for the result list
+    struct ListNode dummy;
+    dummy.next = NULL;
+    struct ListNode* tail = &dummy;
+    
+    // Create an array to track current nodes for each list
+    struct ListNode** current = (struct ListNode**)malloc(listsSize * sizeof(struct ListNode*));
+    for (int i = 0; i < listsSize; i++) {
+        current[i] = lists[i];
+    }
+    
+    // Continue until all lists are exhausted
+    while (1) {
+        int minIdx = -1;
+        int minVal = INT_MAX;
+        
+        // Find the list with the minimum value at its current position
+        for (int i = 0; i < listsSize; i++) {
+            if (current[i] != NULL && current[i]->val < minVal) {
+                minVal = current[i]->val;
+                minIdx = i;
+            }
+        }
+        
+        // If no valid node found, all lists are exhausted
+        if (minIdx == -1) break;
+        
+        // Add the minimum node to the result list
+        tail->next = current[minIdx];
+        tail = tail->next;
+        
+        // Move to the next node in the selected list
+        current[minIdx] = current[minIdx]->next;
+    }
+    
+    // Clean up
+    free(current);
+    
+    return dummy.next;
+}

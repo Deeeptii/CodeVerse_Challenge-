@@ -1,0 +1,99 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+char* simplifyPath(char* path) {
+    // Calculate the length of the input path
+    int len = strlen(path);
+    
+    // Create a stack to store directory names
+    // Each directory name can be at most len characters long
+    char** stack = (char**)malloc(len * sizeof(char*));
+    int top = -1; // Stack pointer (index of the top element)
+    
+    // Create a buffer to store the current directory name
+    char buffer[len + 1];
+    int buffer_index = 0;
+    
+    // Create a result string to store the final path
+    char* result = (char*)malloc((len + 1) * sizeof(char));
+    
+    // Initialize stack elements
+    for (int i = 0; i < len; i++) {
+        stack[i] = (char*)malloc((len + 1) * sizeof(char));
+    }
+    
+    // Process each character in the path
+    for (int i = 0; i <= len; i++) {
+        // If we reach a slash or the end of the string
+        if (i == len || path[i] == '/') {
+            // If we have characters in the buffer, process them
+            if (buffer_index > 0) {
+                // Make the buffer a proper string
+                buffer[buffer_index] = '\0';
+                
+                // If the directory is ".", do nothing (current directory)
+                if (strcmp(buffer, ".") == 0) {
+                    // Do nothing
+                }
+                // If the directory is "..", go up one level (pop from stack)
+                else if (strcmp(buffer, "..") == 0) {
+                    if (top >= 0) {
+                        top--; // Pop from stack
+                    }
+                }
+                // Otherwise, push the directory name onto the stack
+                else {
+                    top++;
+                    strcpy(stack[top], buffer);
+                }
+                
+                // Reset the buffer
+                buffer_index = 0;
+            }
+        }
+        // If it's not a slash, add the character to the buffer
+        else {
+            buffer[buffer_index] = path[i];
+            buffer_index++;
+        }
+    }
+    
+    // Construct the result string
+    if (top == -1) {
+        // If the stack is empty, the path is the root directory
+        strcpy(result, "/");
+    } else {
+        // Start with an empty string
+        result[0] = '\0';
+        
+        // Add each directory from the stack to the result
+        for (int i = 0; i <= top; i++) {
+            strcat(result, "/");
+            strcat(result, stack[i]);
+        }
+    }
+    
+    // Free the memory allocated for the stack
+    for (int i = 0; i < len; i++) {
+        free(stack[i]);
+    }
+    free(stack);
+    
+    return result;
+}
+
+// Test the function
+int main() {
+    char test1[] = "/home/";
+    char test2[] = "/../";
+    char test3[] = "/home//foo/";
+    char test4[] = "/a/./b/../../c/";
+    
+    printf("Input: %s\nOutput: %s\n\n", test1, simplifyPath(test1));
+    printf("Input: %s\nOutput: %s\n\n", test2, simplifyPath(test2));
+    printf("Input: %s\nOutput: %s\n\n", test3, simplifyPath(test3));
+    printf("Input: %s\nOutput: %s\n\n", test4, simplifyPath(test4));
+    
+    return 0;
+}
